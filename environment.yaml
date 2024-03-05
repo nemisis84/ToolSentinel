@@ -1,0 +1,10 @@
+name: ToolSentinelEnv
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11.*
+  - imutils
+  - face_recognition
+  # - opencv-python=4.9.0 Manual import
+  # - pickle Manual import
