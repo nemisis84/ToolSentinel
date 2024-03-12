@@ -1,21 +1,24 @@
 from transitions import Machine
 from facial_recognition import face_recognition_controller as frc
-
+from speech_handler import main as speech_recogniser
 
 class StateMachine:
-    states = ['waiting', 'FindPurpose', "AskForTool", 'AwaitAction']
+    states = ["idle", 'waiting', 'FindPurpose', "AskForTool", 'AwaitAction']
 
     def __init__(self):
-        self.machine = Machine(model=self, states=StateMachine.states, initial='waiting')
+        self.machine = Machine(model=self, states=StateMachine.states, initial='idle')
         self.camera = frc.FaceRecognitionController()
-        # self.speech_recognizer = SpeechRecognizer()
+        self.speech_recognizer = speech_recogniser
         self.setup_transitions()
         self.setup_state_functions()
 
         self.tools = {"hammer": True, "scissor": True} # True if available
         self.get_tool = True
 
+        self.recognised_users = ["Simen"]
+
     def setup_transitions(self):
+        self.machine.add_transition('initiate_stm', 'idle', 'waiting')
         self.machine.add_transition('recognise_person', 'waiting', 'FindPurpose', conditions=['is_authenticated'])
         self.machine.add_transition('purpose_decided', 'FindPurpose', 'AskForTool', conditions=['is_valid_input'])
         self.machine.add_transition('tool_decided', 'AskForTool', 'AwaitAction', conditions=['is_valid_input'])
@@ -24,6 +27,7 @@ class StateMachine:
         self.machine.add_transition('timeout_or_quit', '*', 'waiting')
 
     def setup_state_functions(self):
+        self.machine.on_exit_idle("start_camera")
         self.machine.on_enter_FindPurpose('ask_purpose_question')
         self.machine.on_enter_AskForTool("which_tool_question")
         self.machine.on_enter_AwaitAction("open_safe")
@@ -80,11 +84,14 @@ class StateMachine:
         input_message = input_message.lower()
         print(f"You want to {input_message} a tool. Which tool do you want to {input_message}?")
 
+    def start_camera(self):
+        pass
 
 def main():
     # Instantiate the StateMachine
     sm = StateMachine()
-    print("State machine initialized")
+    print("State machine initialized. Current state: ", sm.state)
+    sm.initiate_stm()
 
     # Simulate triggering transitions based on user input
     while True:
