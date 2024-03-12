@@ -2,7 +2,6 @@ import cv2
 
 
 def take_headshots(name, image_path):
-    global stop_flag
 
     cam = cv2.VideoCapture(0)
 

@@ -10,7 +10,7 @@ import time
 import cv2
 
 
-def recognise(queue):
+def recognise(queue, stop_flag):
 	#Initialize 'currentname' to trigger only when a new person is identified.
 	currentname = "unknown"
 	#Determine faces from encodings.pickle file model created from train_model.py
@@ -19,8 +19,8 @@ def recognise(queue):
 	# load the known faces and embeddings along with OpenCV's Haar
 	# cascade for face detection
 	print("[INFO] loading encodings + face detector...")
-	data = pickle.loads(open(encodingsP, "rb").read())
 
+	data = pickle.loads(open(encodingsP, "rb").read())
 	# initialize the video stream and allow the camera sensor to warm up
 	# Set the ser to the followng
 	# src = 0 : for the build in single web cam, could be your laptop webcam
@@ -28,12 +28,13 @@ def recognise(queue):
 	vs = VideoStream(src=0,framerate=10).start()
 	#vs = VideoStream(usePiCamera=True).start()
 	time.sleep(1.0)
-
+	
 	# start the FPS counter
 	fps = FPS().start()
 
 	# loop over frames from the video file stream
-	while True:
+	while not stop_flag.is_set():
+		
 		# grab the frame from the threaded video stream and resize it
 		# to 500px (to speedup processing)
 		frame = vs.read()
