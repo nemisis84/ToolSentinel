@@ -1,3 +1,6 @@
 */dataset/
 */__pycache__/
 */encodings.pickle
+*/dist
+/build
+/*egg-info

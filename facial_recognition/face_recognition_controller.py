@@ -1,6 +1,7 @@
-import headshots
-import facial_req
-import train_model
+# import headshots
+from facial_recognition import headshots
+from facial_recognition import facial_req
+from facial_recognition import train_model
 import os
 import threading
 import time
