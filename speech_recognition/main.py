@@ -20,7 +20,12 @@ def recognize_voice():
         print("Could not request results; {0}".format(e))
     print("Done")
 
-def speak():
-    pass
+def speak(message):
+    engine = pyttsx3.init()
+    rate = engine.getProperty('rate')
+    engine.setProperty('rate', rate-100)
+    engine.say('{}'.format(message))
+    engine.runAndWait()
 
-spoken_text = recognize_voice()
+#spoken_text = recognize_voice()
+speak('throughout heaven and earth, i alone, am the honored one')
