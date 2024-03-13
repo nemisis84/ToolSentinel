@@ -11,8 +11,9 @@ class FaceRecognitionController:
 
     def __init__(self):
         self.face_queue = queue.Queue()
-        self.identity_queue = queue.Queue()
-        self.stop_flag = stop_flag = threading.Event()  # Create stop_flag as an Event
+        # self.identity_queue = queue.Queue()
+        self.last_identity = None
+        self.stop_flag = threading.Event()  # Create stop_flag as an Event
     def register(self, name):
         
         # Take pictures
@@ -43,13 +44,12 @@ class FaceRecognitionController:
             if not self.face_queue.empty():
                 # Get the data from the queue
                 persons = self.face_queue.get()
-            # else:
-            #     persons = ["None"]
-                self.identity_queue.put(persons)
+                # self.identity_queue.put(persons)
+                self.last_identity = persons
 
     def identity_queue_get(self):
-        if not self.identity_queue.empty():
-            return self.identity_queue.get()
+        if self.last_identity:
+            return self.last_identity
         else:
             return None
 

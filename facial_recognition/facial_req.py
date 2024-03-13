@@ -14,8 +14,10 @@ def recognise(queue, stop_flag):
 	#Initialize 'currentname' to trigger only when a new person is identified.
 	currentname = "unknown"
 	#Determine faces from encodings.pickle file model created from train_model.py
-	encodingsP = "encodings.pickle"
-
+	if __name__ == "__main__":
+		encodingsP = "encodings.pickle"
+	else:
+		encodingsP = "facial_recognition/encodings.pickle"
 	# load the known faces and embeddings along with OpenCV's Haar
 	# cascade for face detection
 	print("[INFO] loading encodings + face detector...")
