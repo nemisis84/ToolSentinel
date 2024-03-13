@@ -4,6 +4,11 @@ from speech_handler import main as speech_recogniser
 import queue
 import threading
 import time
+import serial
+
+# CHECK THIS WHEN SETTING UP THE BOARD
+SERIALPORT = 'COM3'
+BAUDRATE = 9600
 
 class StateMachine:
     states = ["idle", 'waiting', 'FindPurpose', "AskForTool", 'AwaitAction']
@@ -15,6 +20,8 @@ class StateMachine:
         self.speaker = speech_recogniser.speak # Input text
         self.setup_transitions()
         self.setup_state_functions()
+
+        self.ser = serial.Serial(SERIALPORT, BAUDRATE, timeout=1)
 
         self.tools = {"hammer": True, "scissor": True} # True if available
         self.get_tool = True
@@ -115,11 +122,19 @@ class StateMachine:
     def open_safe(self, input_message):
         action = "get" if self.get_tool else "return"
         # print(f"Open safe and {action} the {input_message}")
+
+        angle = -90
+        self.ser.write(str(angle).encode())
+        
         self.speaker(f"Open safe and {action} the {input_message}")
 
     def close_safe(self):
         # print("Close safe")
         self.speaker("Safe closing")
+
+        angle = 90
+        self.ser.write(str(angle).encode())
+        
         time.sleep(5)
 
     def which_tool_question(self, input_message):
