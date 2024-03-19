@@ -23,7 +23,7 @@ class StateMachine:
 
         self.ser = serial.Serial(SERIALPORT, BAUDRATE, timeout=1)
 
-        self.tools = {"hammer": True, "scissor": True} # True if available
+        self.tools = {"scissor": True, "hammer": True} # True if available
         self.get_tool = True
         self.tool_in_focus = None
 
@@ -51,7 +51,7 @@ class StateMachine:
         users = self.camera.identity_queue_get()
 
         
-        if not users: 
+        if not users:
             return False
         
         # Only allow one user in the camera at the time
@@ -71,29 +71,24 @@ class StateMachine:
                 input_message = "scissor" if input_message == "one" else "hammer"
 
                 if self.tools[input_message] and self.get_tool:
-                    # print("Tool available")
                     self.speaker(f"{input_message} available")
                     self.tools[input_message] = False
                     self.tool_in_focus = input_message
                     return True
                 elif not self.tools[input_message] and not self.get_tool:
-                    # print("Free to return tool")
                     self.speaker(f"Free to return {input_message}")
                     self.tools[input_message] = True
                     self.tool_in_focus = input_message
                     return True
                 elif not self.tools[input_message] and self.get_tool:
-                    # print(f"{input_message} unavailable")
                     self.speaker(f"{input_message} unavailable")
                     self.invalid_action()
                     return False
                 elif self.tools[input_message] and not self.get_tool:
-                    # print("Tool already in box")
                     self.speaker(f"{input_message} already in box")
                     self.invalid_action()
                     return False
             else:
-                # print("Tool does not belong to the safe")
                 self.speaker("Tool does not belong to the safe")
                 return False
         if self.state == "FindPurpose":
@@ -107,29 +102,24 @@ class StateMachine:
                     self.speaker("Do you want to get a tool or quit?")
                     return False
                 self.get_tool = True if input_message == "one" else False
-                # print("Valid purpose")
                 self.speaker("Valid purpose")
                 return True
             else:
-                # print("Invalid purpose")
                 self.speaker("Invalid purpose")
                 return False
 
     def ask_purpose_question(self):
-        # print("You are authenticated. Say one to get a tool, two for returning a tool")
         self.speaker("You are authenticated. Say one to get a tool, two for returning a tool")
 
     def open_safe(self, input_message):
         action = "get" if self.get_tool else "return"
-        # print(f"Open safe and {action} the {input_message}")
 
         angle = -90
         self.ser.write(str(angle).encode())
         
-        self.speaker(f"Open safe and {action} the {input_message}")
+        self.speaker(f"Open safe and {action} the {self.tool_in_focus}")
 
     def close_safe(self):
-        # print("Close safe")
         self.speaker("Safe closing")
 
         angle = 90
@@ -140,7 +130,6 @@ class StateMachine:
     def which_tool_question(self, input_message):
         input_message = input_message.lower()
         input_message = "grab" if input_message == "one" else "return"
-        print(f"You want to {input_message} a tool. Which tool do you want to {input_message}?:")
         items = list(self.tools.keys())
         self.speaker(f"You want to {input_message} a tool. Which tool do you want to {input_message}?\none: {items[0]}, two: {items[1]}")
 
@@ -154,6 +143,14 @@ class StateMachine:
 
 
 def main():
+
+    interface = input("Text based (1) or voice based (2) user interface?: ")
+    while True:
+        if interface in ["1","2"]:
+            interface = int(interface)
+            break
+        interface = input("Enter 1 or 2. Text based (1) or voice based (2) user interface?: ")
+
     # Instantiate the StateMachine
     sm = StateMachine()
     print("State machine initialized. Current state: ", sm.state)
@@ -167,24 +164,30 @@ def main():
             if sm.state == 'waiting':
                 sm.recognise_person()
             elif sm.state == 'FindPurpose':
-                # input_message = input("get or return tool?: ")
-                input_message = sm.speech_recognizer()
+                if interface == 1:
+                    input_message = input("get(one) or return(two) tool?: ")
+                else:
+                    input_message = sm.speech_recognizer()
                 if input_message == "quit":
                     sm.quit()
                 else:
                     sm.purpose_decided(input_message)
             elif sm.state == 'AskForTool':
-                # input_message = input("Scissor or Hammer?: ")
-                input_message = sm.speech_recognizer()
+                if interface == 1:
+                    input_message = input("Scissor(one) or Hammer(two)?: ")
+                else:
+                    input_message = sm.speech_recognizer()
                 if input_message == "quit":
                     sm.quit()
                 else:
                     sm.tool_decided(input_message)
             elif sm.state == 'AwaitAction':
                 action = "gotten" if sm.get_tool else "returned"
-                # input_message = input(f"Have you {action} the {sm.tool_in_focus}?: ")
-                sm.speaker(f"Have you {action} the {sm.tool_in_focus}?: ")
-                input_message = sm.speech_recognizer()
+                if interface == 1:
+                    input_message = input(f"Have you {action} the {sm.tool_in_focus}?: ")
+                else:
+                    sm.speaker(f"Have you {action} the {sm.tool_in_focus}?: ")
+                    input_message = sm.speech_recognizer()
                 if input_message.lower() == "yes":
                     sm.action_taken()
     except KeyboardInterrupt:
