@@ -40,3 +40,14 @@ Setup of project using `setup.py`, manage dependencies with `environment.yaml`, 
 
    This will install the project along with its dependencies.
 
+
+## Run project
+
+### Register user
+
+To register a user run:
+
+   ```bash
+   python register.py
+   ```
+Insert your name when asked. A camera on your computer will pop up. Press enter to take photoes 4-6 should be sufficent. Press esc when you are done. The program will prosess and train the model with the photoes. 

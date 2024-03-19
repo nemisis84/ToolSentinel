@@ -8,7 +8,7 @@ import pickle
 import cv2
 import os
 
-def train(image_data_path):
+def train(image_data_path, path):
 	
 	print("[INFO] start processing faces...")
 	imagePaths = list(paths.list_images(image_data_path))
@@ -47,6 +47,6 @@ def train(image_data_path):
 	# dump the facial encodings + names to disk
 	print("[INFO] serializing encodings...")
 	data = {"encodings": knownEncodings, "names": knownNames}
-	f = open("encodings.pickle", "wb")
+	f = open(f"{path}encodings.pickle", "wb")
 	f.write(pickle.dumps(data))
 	f.close()

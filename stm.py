@@ -7,7 +7,7 @@ import time
 import serial
 
 # CHECK THIS WHEN SETTING UP THE BOARD
-SERIALPORT = 'COM3'
+SERIALPORT = 'COM5'
 BAUDRATE = 9600
 
 class StateMachine:

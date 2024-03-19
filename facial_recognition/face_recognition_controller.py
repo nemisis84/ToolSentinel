@@ -11,20 +11,21 @@ class FaceRecognitionController:
 
     def __init__(self):
         self.face_queue = queue.Queue()
-        # self.identity_queue = queue.Queue()
         self.last_identity = None
         self.stop_flag = threading.Event()  # Create stop_flag as an Event
-    def register(self, name):
+    
+    def register(self, name, path):
         
         # Take pictures
-        image_path = "dataset/"+ name +"/"
+        print(path)
+        image_path = path + "dataset/" + name + "/"
         if not os.path.exists(image_path):
             os.makedirs(image_path)
         headshots.take_headshots(name, image_path)
 
         # Train
-        image_data_path = "dataset"
-        train_model.train(image_data_path)
+        image_data_path = path + "dataset"
+        train_model.train(image_data_path, path)
         
     def start_camera(self):
         self.camera_thread = threading.Thread(target=facial_req.recognise, args=(self.face_queue, self.stop_flag))
@@ -55,21 +56,23 @@ class FaceRecognitionController:
 
 
 if __name__ == "__main__":
-    face_recognition_controller = FaceRecognitionController()
-    # face_recognition_controller.register("Simen")
+    pass
+    # face_recognition_controller = FaceRecognitionController()
+    # path = ""
+    # face_recognition_controller.register("Simen", path)
     # time.sleep(5)
-    face_recognition_controller.start_camera()
+    # face_recognition_controller.start_camera()
 
-    identity_queue = queue.Queue()
-    identity_thread = threading.Thread(target=face_recognition_controller.get_identification)
-    identity_thread.start()
-    time.sleep(3)
-    print("Here")
-    for i in range(10):
-        print(face_recognition_controller.identity_queue_get())
-        time.sleep(1)
+    # identity_queue = queue.Queue()
+    # identity_thread = threading.Thread(target=face_recognition_controller.get_identification)
+    # identity_thread.start()
+    # time.sleep(3)
+    # print("Here")
+    # for i in range(10):
+    #     print(face_recognition_controller.identity_queue_get())
+    #     time.sleep(1)
 
-    print("Stop")
-    face_recognition_controller.stop_camera()  # Stop the camera thread
+    # print("Stop")
+    # face_recognition_controller.stop_camera()  # Stop the camera thread
 
-    print("program stopped")
+    # print("program stopped")
