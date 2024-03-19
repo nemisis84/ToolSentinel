@@ -28,7 +28,7 @@ def recognize_voice():
 def speak(message):
     engine = pyttsx3.init()
     rate = engine.getProperty('rate')
-    engine.setProperty('rate', rate-100)
+    engine.setProperty('rate', rate-70)
     engine.say('{}'.format(message))
     engine.runAndWait()
 

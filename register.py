@@ -2,8 +2,6 @@ from facial_recognition import face_recognition_controller as frc
 
 controller = frc.FaceRecognitionController()
 
-import sys
-
 def register(name):
     controller = frc.FaceRecognitionController()
     path = "facial_recognition/"
