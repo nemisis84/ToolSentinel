@@ -50,3 +50,18 @@ def updateOnReturning(name, tool):
     df = pd.DataFrame(dic)
     df.to_csv(LOGFILE, index=False)
 
+
+def getBackground(name):
+
+    load = pd.read_csv(LOGFILE)
+    dic = load.to_dict()
+
+    retList = []
+    counter = 0
+    for element in load["Name"]:
+    
+        if element == name:
+            retList.append([dic["Tool"][counter], dic["Pickup Timestamp"][counter], dic["Return Timestamp"][counter]])
+        counter += 1
+
+    return retList
