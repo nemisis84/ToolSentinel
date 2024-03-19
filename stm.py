@@ -13,7 +13,7 @@ BAUDRATE = 9600
 class StateMachine:
     states = ["idle", 'waiting', 'FindPurpose', "AskForTool", 'AwaitAction']
 
-    def __init__(self):
+    def __init__(self, no_arduino):
         self.machine = Machine(model=self, states=StateMachine.states, initial='idle')
         self.camera = frc.FaceRecognitionController()
         self.speech_recognizer = speech_recogniser.recognize_voice # Wait for voice
@@ -28,6 +28,9 @@ class StateMachine:
         self.tool_in_focus = None
 
         self.recognised_users = ["Simen"]
+
+        self.no_arduino = no_arduino
+        self.safe_open = False
 
     def setup_transitions(self):
         self.machine.add_transition('initiate_stm', 'idle', 'waiting')
@@ -113,19 +116,32 @@ class StateMachine:
 
     def open_safe(self, input_message):
         action = "get" if self.get_tool else "return"
-
-        angle = -90
-        self.ser.write(str(angle).encode())
-        
+        if self.no_arduino:
+            print("Safe open")
+        else:
+            angle = -90
+            self.ser.write(str(angle).encode())
+        self.safe_open = True
         self.speaker(f"Open safe and {action} the {self.tool_in_focus}")
 
     def close_safe(self):
         self.speaker("Safe closing")
-
-        angle = 90
-        self.ser.write(str(angle).encode())
-        
+        if self.no_arduino:
+            print("Safe closed")
+        else:
+            angle = 90
+            self.ser.write(str(angle).encode())
+        self.safe_open = False
         time.sleep(5)
+
+    def close_safe_on_quit(self):
+        if self.safe_open:
+            if self.no_arduino:
+                print("Safe closed")
+            else:
+                angle = 90
+                self.ser.write(str(angle).encode())
+            self.safe_open = False
 
     def which_tool_question(self, input_message):
         input_message = input_message.lower()
@@ -151,8 +167,17 @@ def main():
             break
         interface = input("Enter 1 or 2. Text based (1) or voice based (2) user interface?: ")
 
+    no_arduino = input("Do you have the arduino (yes/no): ")
+    while True:
+        no_arduino = no_arduino.lower()
+        if no_arduino in ["yes","no"]:
+            no_arduino = no_arduino
+            break
+        no_arduino = input("Enter yes or no. Do you have the arduino (yes/no): ")
+
+    no_arduino = False if no_arduino == "yes" else True
     # Instantiate the StateMachine
-    sm = StateMachine()
+    sm = StateMachine(no_arduino)
     print("State machine initialized. Current state: ", sm.state)
     sm.initiate_stm()
 
@@ -168,7 +193,7 @@ def main():
                     input_message = input("get(one) or return(two) tool?: ")
                 else:
                     input_message = sm.speech_recognizer()
-                if input_message == "quit":
+                if input_message.lower() == "quit":
                     sm.quit()
                 else:
                     sm.purpose_decided(input_message)
@@ -177,7 +202,7 @@ def main():
                     input_message = input("Scissor(one) or Hammer(two)?: ")
                 else:
                     input_message = sm.speech_recognizer()
-                if input_message == "quit":
+                if input_message.lower() == "quit":
                     sm.quit()
                 else:
                     sm.tool_decided(input_message)
@@ -190,8 +215,12 @@ def main():
                     input_message = sm.speech_recognizer()
                 if input_message.lower() == "yes":
                     sm.action_taken()
+                elif input_message.lower() == "quit":
+                    sm.close_safe_on_quit()
+                    sm.quit()
     except KeyboardInterrupt:
         sm.camera.stop_camera()
+        sm.close_safe_on_quit()
         print("All processes stopped")
 
 if __name__ == "__main__":
