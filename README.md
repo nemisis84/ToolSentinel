@@ -19,7 +19,7 @@ The project is a simple prototype of a bigger system initally designed. The proj
 
 ### Software
 - Python - implementing stm, face recognition, speech recognition and stm. 
-- C - Ardunio logic
+- C - Arduino logic
 - Miniconda - For environment management. Dependencies can be found in environment.yaml
 
 For the implemented solution, we have this deployment diagram: 
