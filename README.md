@@ -138,12 +138,12 @@ For a manager it could be useful to check the log if a tool is missing or broken
    ```bash
    python get_log.py
    ```
-You will get the option to enter an integer to recieve the n latest entries in the log or enter a name to get all records to that person. There are three types of entries:
-- A tool is specified under the tool column and has a pickup timestamp and a return timestamp. This is tools that have been used and returned.
-- A tool is specified under the tool column and has a pickup timestamp and a return timestamp = -1. This is tools that is currently beeing used.
+You will get the option to enter an integer to receive the n latest entries in the log or enter a name to get all records to that person. There are three types of entries:
+- A tool is specified under the tool column and has a pickup timestamp and a return timestamp != -1. This is for tools that have been used and returned.
+- A tool is specified under the tool column and has a pickup timestamp and a return timestamp = -1. This is tools that are currently being used.
 - Under the tool column it says register, which is an entry to when a user is registered to the facial recognition. 
 
-Below you can see an examples of both possible option to get the logs. 
+Below you can see an examples of both possible options to get the logs. 
 
 ![STM demo](misc/get_log_demo.png)
 
@@ -152,7 +152,7 @@ This project is licensed under the MIT license -see the [LICENSE.md](LICENSE) fi
 
 ## Acknowledgments
 
-For the facial recgnition we used this open source github repository with some own implementation changes:
+For the facial recognition we used this open source github repository with some own implementation changes:
 
 https://github.com/carolinedunn/facial_recognition
 
