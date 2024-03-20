@@ -40,6 +40,26 @@ Setup of project using `setup.py`, manage dependencies with `environment.yaml`, 
 
    This will install the project along with its dependencies.
 
+### Arduino Setup
+
+1. Firstly, you need to download Arduino IDE from the official website, according to your computer operating system. Accept all the packages instalations and run the software.
+
+2. Grab the Arduino Uno board and servo, follow the steps:
+   ```
+   - With the use of cables, connect the red entry of the servo to the 5V entry of the board.
+
+   - Connect the black cable of the motor to the ground entry of the board.
+
+   - Connect the white cable of the motor to the pin number 9 of the board.
+   
+   - Connect the board to the computer, to the USB entry.
+   ```
+3. Go to the Arduino IDE and check the board that is currently selected, if there is none, then select the arduino uno and check the port that it is connected to. Ex: COM3. This value will be used in step 5 so keep it in mind.
+
+4. When the lights turn on the board, copy the code on the file arduino.c and paste it into the Arduino IDE. After that, compile and send it to the board.
+
+5. Finally, check the stm.py file and change the SERIALPORT variable to match the port that you checked on step 3. With this, arduino is set up and ready to go.
+
 
 ## Run project
 
