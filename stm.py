@@ -26,7 +26,12 @@ class StateMachine:
             self.ser = serial.Serial(SERIALPORT, BAUDRATE, timeout=1)
         
         self.logger = Logger("logs/")
-        self.tools = self.logger.checkAvailability() # {tool:bool} True if available
+        self.logger.createDataBase()
+        self.logger.insert_tools()
+        if self.logger.log_empty():
+            self.tools = {"Hammer": True, "Scissor": True}
+        else:
+            self.tools = self.logger.checkAvailability() # {tool:bool} True if available
         self.get_tool = True
         self.tool_in_focus = None
 
@@ -49,7 +54,6 @@ class StateMachine:
 
     def setup_state_functions(self):
         self.machine.on_exit_idle("start_camera")
-        self.machine.on_exit_idle("create_log")
         self.machine.on_enter_FindPurpose('ask_purpose_question')
         self.machine.on_enter_AskForTool("which_tool_question")
         self.machine.on_enter_AwaitAction("open_safe")
@@ -79,7 +83,7 @@ class StateMachine:
         if self.state == "AskForTool":
 
             if input_message in ["one", "two"]:
-                input_message = "scissor" if input_message == "one" else "hammer"
+                input_message = "Scissor" if input_message == "one" else "Hammer"
 
                 if self.tools[input_message] and self.get_tool:
                     self.speaker(f"{input_message} available")
@@ -160,7 +164,7 @@ class StateMachine:
         input_message = input_message.lower()
         input_message = "grab" if input_message == "one" else "return"
         items = list(self.tools.keys())
-        self.speaker(f"You want to {input_message} a tool. Which tool do you want to {input_message}?\none: {items[0]}, two: {items[1]}")
+        self.speaker(f"You want to {input_message} a tool. Which tool do you want to {input_message}?\none: Scissor, two: Hammer")
 
     def start_camera(self):
         self.camera.start_camera()
@@ -170,8 +174,6 @@ class StateMachine:
         identity_thread = threading.Thread(target=self.camera.get_identification)
         identity_thread.start()
 
-    def create_log(self):
-        self.logger.createDataBase()
 
 def main():
 

@@ -54,25 +54,3 @@ class FaceRecognitionController:
         else:
             return None
 
-
-if __name__ == "__main__":
-    pass
-    # face_recognition_controller = FaceRecognitionController()
-    # path = ""
-    # face_recognition_controller.register("Simen", path)
-    # time.sleep(5)
-    # face_recognition_controller.start_camera()
-
-    # identity_queue = queue.Queue()
-    # identity_thread = threading.Thread(target=face_recognition_controller.get_identification)
-    # identity_thread.start()
-    # time.sleep(3)
-    # print("Here")
-    # for i in range(10):
-    #     print(face_recognition_controller.identity_queue_get())
-    #     time.sleep(1)
-
-    # print("Stop")
-    # face_recognition_controller.stop_camera()  # Stop the camera thread
-
-    # print("program stopped")

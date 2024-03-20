@@ -8,6 +8,7 @@ def register(name):
     controller = frc.FaceRecognitionController()
     path = "facial_recognition/"
     controller.register(name, path)
+    logger.createDataBase()
     logger.register(name)
 
 def main():

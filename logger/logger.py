@@ -25,6 +25,32 @@ class Logger:
 
         df.to_csv(self.LOGFILE, index=False)
 
+    def insert_tools(self):
+
+        load = pd.read_csv(self.LOGFILE)
+
+        if any(load["Tool"].str.contains("Hammer")) or any(load["Tool"].str.contains("Scissor")):
+            return
+
+        scissor = {"Name": ["Inital_insert"],
+            "Tool": ["Scissor"],
+            "Pickup Timestamp": [datetime.now()],
+            "Return Timestamp": [datetime.now()]}
+        
+        hammer = {"Name": ["Inital_insert"],
+            "Tool": ["Hammer"],
+            "Pickup Timestamp": [datetime.now()],
+            "Return Timestamp": [datetime.now()]}
+        
+        df1 = pd.DataFrame(hammer)
+        df2 = pd.DataFrame(scissor)
+
+        frames = [load, df1, df2]
+        loaded_df = pd.concat(frames)
+        loaded_df.to_csv(self.LOGFILE, index=False)
+
+    def log_empty(self):
+        return pd.read_csv(self.LOGFILE).empty
 
     def updateOnPicking(self, name, tool):
         data = {"Name": [name],
@@ -45,20 +71,7 @@ class Logger:
         
         load = pd.read_csv(self.LOGFILE)
         mask = (load["Name"] == name) & (load["Tool"] == tool)
-        # matching_row = load[mask]
         load.loc[mask, "Return Timestamp"] = datetime.now()
-        # counter = 0
-        # for el in load["Tool"]:
-
-        #     dic = load.to_dict()
-            
-
-        #     if dic["Name"][counter] == name and int(dic["Return Timestamp"][counter]) == -1 and dic["Tool"][counter] == tool:
-                
-        #         dic["Return Timestamp"][counter] = datetime.now()
-        #         break
-
-        #     counter += 1
 
         load = pd.DataFrame(load)
         load.to_csv(self.LOGFILE, index=False)
