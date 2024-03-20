@@ -126,7 +126,7 @@ This will start a state machine that will accept handle the user interface, inte
 
 You have the option of using it with and without an arduino, and you will be asked about this when the application starts. 
 
-You could also choose between a text based interface or speech recognition. Due to Python's design and our choices, the response time using speech recognition will be significant. We would also recommend in this case to be in quit curcumstances and mute your microphone after your statement. We also mainly use one and two as input as that is easy for the speech recognition to recognize. 
+You could also choose between a text based interface or speech recognition. Due to Python's design and our choices, the response time using speech recognition will be significant. We would also recommend in this case, to be in quiet circumstances and mute your microphone after your statement. We also mainly use "one" and "two" as input, since that way it's easier for the speech recognition to recognize. 
 
 Below is a demo of the text based version. To use the voice based version simply enter 2 instead of one on the first question.
 
