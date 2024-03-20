@@ -7,7 +7,7 @@ This project is done with the course Ambient Intelligence at Instituto Superior 
 
 ![Group Photo](misc/groupPhoto.jpg)
 
-ToolSentinel has the goal of having simple and secure user interaction with a safe that stores valuable tools for industrial purposes. The users are authenticated using face recognition and can interact with speech. Furthermore, the manager can track back in time of who used what when by checking the logs. This could also be used for checking who is currently possessing each tool. 
+ToolSentinel has the goal of having simple and secure user interaction with a safe that stores valuable tools for industrial purposes. The users are authenticated using face recognition and can interact with speech. Furthermore, the manager can track back in time of who used what, and when, by checking the logs. This could also be used for checking who is currently possessing each tool. 
 
 The project is a simple prototype of a bigger system initally designed. The project is meant to show the main features, while some implementation steps was not included. In addition, a computer was used to both because of the lack of a microphone and camera and for simplicity. 
 
