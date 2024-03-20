@@ -109,7 +109,7 @@ First you would need to register a user. To register a user run:
    ```bash
    python register.py
    ```
-Insert your name when asked. A camera on your computer will pop up. Press space to take photoes 4-6 should be sufficent. Press esc when you are done. The program will prosess and train the model with the photoes. 
+Insert your name when asked. A camera on your computer will pop up. Press space to take photos, 4-6 should be sufficent. Press esc when you are done. The program will process and train the model with the photos. 
 
 ![register](misc/register.png)
 
