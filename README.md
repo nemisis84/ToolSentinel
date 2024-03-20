@@ -1,5 +1,5 @@
 # ToolSentinel
-This project is done with the course Ambient Intelligence at Instituto Superior Tecnico. ToolSentinal implements a smart safe that makes access and access control easy by leveraging face recognition and speech recognition. The contributers to this project are (from the left):
+This project is done with the course Ambient Intelligence at Instituto Superior Tecnico. ToolSentinel implements a smart safe that makes access and access control easy by leveraging face recognition and speech recognition. The contributers to this project are (from the left):
 
 - Mário Santos - 99275
 - Daniel Gomes - 99195
