@@ -1,10 +1,12 @@
 from transitions import Machine
 from facial_recognition import face_recognition_controller as frc
 from speech_handler import main as speech_recogniser
+from logger.logger import Logger
 import queue
 import threading
 import time
 import serial
+
 
 # CHECK THIS WHEN SETTING UP THE BOARD
 SERIALPORT = 'COM5'
@@ -20,17 +22,21 @@ class StateMachine:
         self.speaker = speech_recogniser.speak # Input text
         self.setup_transitions()
         self.setup_state_functions()
-
-        self.ser = serial.Serial(SERIALPORT, BAUDRATE, timeout=1)
-
-        self.tools = {"scissor": True, "hammer": True} # True if available
+        if not no_arduino:
+            self.ser = serial.Serial(SERIALPORT, BAUDRATE, timeout=1)
+        
+        self.logger = Logger("logs/")
+        self.tools = self.logger.checkAvailability() # {tool:bool} True if available
         self.get_tool = True
         self.tool_in_focus = None
 
-        self.recognised_users = ["Simen"]
+        self.recognised_users = self.logger.find_users()
+        self.current_user = ""
 
         self.no_arduino = no_arduino
         self.safe_open = False
+
+
 
     def setup_transitions(self):
         self.machine.add_transition('initiate_stm', 'idle', 'waiting')
@@ -43,6 +49,7 @@ class StateMachine:
 
     def setup_state_functions(self):
         self.machine.on_exit_idle("start_camera")
+        self.machine.on_exit_idle("create_log")
         self.machine.on_enter_FindPurpose('ask_purpose_question')
         self.machine.on_enter_AskForTool("which_tool_question")
         self.machine.on_enter_AwaitAction("open_safe")
@@ -62,6 +69,7 @@ class StateMachine:
             return False
 
         if users[0] in self.recognised_users:
+            self.current_user = users[0]
             return True
         
         return False
@@ -125,6 +133,10 @@ class StateMachine:
         self.speaker(f"Open safe and {action} the {self.tool_in_focus}")
 
     def close_safe(self):
+        if self.get_tool:
+            self.logger.updateOnPicking(self.current_user, self.tool_in_focus)
+        else:
+            self.logger.updateOnReturning(self.current_user, self.tool_in_focus)
         self.speaker("Safe closing")
         if self.no_arduino:
             print("Safe closed")
@@ -132,6 +144,7 @@ class StateMachine:
             angle = 90
             self.ser.write(str(angle).encode())
         self.safe_open = False
+        self.current_user = ""
         time.sleep(5)
 
     def close_safe_on_quit(self):
@@ -157,6 +170,8 @@ class StateMachine:
         identity_thread = threading.Thread(target=self.camera.get_identification)
         identity_thread.start()
 
+    def create_log(self):
+        self.logger.createDataBase()
 
 def main():
 
