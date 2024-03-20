@@ -32,7 +32,7 @@ Finally, we created a simplified state machine to handle the user inputs and cal
 
 
 ## Setup
-This project requires a windows machine and an Ardunio kit. It could work on other OSs, but the camera connection might be wrongly configured. The physical setup is illustrated in the image below:
+This project requires a windows machine and an Arduino kit. It could work on other OSs, but the camera connection might be wrongly configured. The physical setup is illustrated in the image below:
 
 ![Setup](misc/setup.jpg)
 
