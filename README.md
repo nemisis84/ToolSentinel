@@ -18,7 +18,7 @@ The project is a simple prototype of a bigger system initally designed. The proj
 - Windows computer
 
 ### Software
-- Python - implementing stm, speech recognition, speech recognition and stm. 
+- Python - implementing stm, face recognition, speech recognition and stm. 
 - C - Ardunio logic
 - Miniconda - For environment management. Dependencies can be found in environment.yaml
 
